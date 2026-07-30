@@ -37,3 +37,38 @@ class Users(Resource):
 
     #Enpoint
 api.add_resource(Users, "/users")
+
+
+class UserByID(Resource):
+
+    # PATCH /users/<id>
+    def patch(self, id):
+
+        user = User.query.get_or_404(id)
+
+        data = request.get_json()
+
+        if "username" in data:
+            user.username = data["username"]
+
+        if "email" in data:
+            user.email = data["email"]
+
+        db.session.commit()
+
+        return user_schema.dump(user), 200
+
+
+    # DELETE /users/<id>
+    def delete(self, id):
+
+        user = User.query.get_or_404(id)
+
+        db.session.delete(user)
+        db.session.commit()
+
+        return {
+            "message": "User deleted successfully"
+        }, 200
+
+api.add_resource(UserByID, "/users/<int:id>")
