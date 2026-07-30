@@ -7,7 +7,7 @@ class UserSchema(Schema):
     username = fields.Str(required =True)
     email = fields.Email(required=True)
 
-    password = fields.Str(load_only=True)
+   
     created_at = fields.DateTime(dump_only=True)
 
     #User's exercises
@@ -19,7 +19,7 @@ class ExerciseSchema(Schema):
     id = fields.Int(dump_only=True)  
 
     name = fields.Str(required=True)
-    description = fields.Str()
+    category = fields.Str()
     duration = fields.Int()
     calories_burned = fields.Int()
 

@@ -27,7 +27,7 @@ class Users(Resource):
         user = User(
             username=data["username"],
             email=data["email"],
-            password=data["password"]
+            age=data.get("age")
         )
 
         db.session.add(user)
@@ -91,7 +91,7 @@ class Exercises(Resource):
 
         exercise = Exercise(
             name=data["name"],
-            description=data.get("description"),
+            category=data.get("category"),
             duration=data.get("duration"),
             calories_burned=data.get("calories_burned"),
             user_id=data["user_id"]
@@ -117,8 +117,8 @@ class ExerciseByID(Resource):
         if "name" in data:
             exercise.name = data["name"]
 
-        if "description" in data:
-            exercise.description = data["description"]
+        if "category" in data:
+            exercise.category = data["category"]
 
         if "duration" in data:
             exercise.duration = data["duration"]
