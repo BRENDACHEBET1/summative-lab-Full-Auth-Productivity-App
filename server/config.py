@@ -2,21 +2,16 @@ from flask import Flask
 from flask_bcrypt import Bcrypt
 from flask_migrate import Migrate
 from flask_restful import Api
-from dotenv import load_dotenv
-import os
 
 from models import db
 
 
-# Load .env variables
-load_dotenv()
-
-
+# Create Flask application
 app = Flask(__name__)
 
 
-# Secret key for Flask sessions
-app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
+# Secret key used to sign Flask session cookies
+app.config["SECRET_KEY"] = "33637955ac002d88a3a3ea47feeb059c85e35f40ca123328eb79160b16fafc1f"
 
 
 # Database configuration
@@ -24,17 +19,17 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///fitness.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 
-# Initialize existing database object from models.py
+# Initialize database from models.py
 db.init_app(app)
 
 
-# Migration support
+# Enable database migrations
 migrate = Migrate(app, db)
 
 
-# Password hashing
+# Initialize bcrypt for password hashing
 bcrypt = Bcrypt(app)
 
 
-# Flask RESTful
+# Initialize Flask-RESTful API
 api = Api(app)
