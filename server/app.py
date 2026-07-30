@@ -72,3 +72,34 @@ class UserByID(Resource):
         }, 200
 
 api.add_resource(UserByID, "/users/<int:id>")
+
+
+class Exercises(Resource):
+
+    # GET /exercises
+    def get(self):
+
+        exercises = Exercise.query.all()
+
+        return exercises_schema.dump(exercises), 200
+
+
+    # POST /exercises
+    def post(self):
+
+        data = request.get_json()
+
+        exercise = Exercise(
+            name=data["name"],
+            description=data.get("description"),
+            duration=data.get("duration"),
+            calories_burned=data.get("calories_burned"),
+            user_id=data["user_id"]
+        )
+
+        db.session.add(exercise)
+        db.session.commit()
+
+        return exercise_schema.dump(exercise), 201
+
+api.add_resource(Exercises, "/exercises")
