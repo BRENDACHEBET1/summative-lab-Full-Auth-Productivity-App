@@ -13,6 +13,9 @@ class User(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, unique=True)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    age = db.Column(db.Integer)
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
 
     # One user can have many exercises
     exercises = db.relationship(
@@ -28,8 +31,8 @@ class Exercise(db.Model):
     __tablename__ = 'exercises'
 
     id = db.Column(db.Integer, primary_key = True)
-    name = db.Column(db.String)
-    category = db.Column(db.String)
+    name = db.Column(db.String(100), nullable=False)
+    category = db.Column(db.String(50))
     duration = db.Column(db.Integer)  
     calories_burned = db.Column(db.Integer)
 
