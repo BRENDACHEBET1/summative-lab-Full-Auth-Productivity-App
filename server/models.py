@@ -19,3 +19,11 @@ class User(db.Model):
     def __repr__(self):
         return f'User {self.username}, ID {self.id}'
 
+class Exercise(db.Model):
+    __tablename__ = 'exercises'
+
+    id = db.Column(db.Integer, primary_key = True)
+    name = db.Column(db.String)
+    category = db.Column(db.String)
+    duration = db.Column(db.Integer)  
+    calories_burned = db.Column(db.Integer)
