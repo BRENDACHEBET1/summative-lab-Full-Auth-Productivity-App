@@ -6,9 +6,12 @@ metadata = MetaData(naming_convention={
     "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
 })
 
+# Initialize the SQLAlchemy database object
 db = SQLAlchemy(metadata=metadata)
 
+#User Model
 class User(db.Model):
+    #Name of the table in the database
     __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -18,6 +21,8 @@ class User(db.Model):
     created_at = db.Column(db.DateTime, server_default=db.func.now())
 
     # One user can have many exercises
+    # One user can have many exercises.
+    # If a user is deleted, all of their exercises are deleted too.
     exercises = db.relationship(
         "Exercise",
         back_populates="user",
@@ -27,7 +32,9 @@ class User(db.Model):
     def __repr__(self):
         return f'User {self.username}, ID {self.id}'
 
+#Exerxise Model
 class Exercise(db.Model):
+    #Name of the table
     __tablename__ = 'exercises'
 
     id = db.Column(db.Integer, primary_key = True)
@@ -44,6 +51,7 @@ class Exercise(db.Model):
     )
 
      # Relationship back to User
+        # Allows access the owner of the exercise using exercise.user
     user = db.relationship("User", back_populates="exercises")
 
     def __repr__(self):
