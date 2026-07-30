@@ -103,3 +103,55 @@ class Exercises(Resource):
         return exercise_schema.dump(exercise), 201
 
 api.add_resource(Exercises, "/exercises")
+
+
+class ExerciseByID(Resource):
+
+    # PATCH /exercises/<id>
+    def patch(self, id):
+
+        exercise = Exercise.query.get_or_404(id)
+
+        data = request.get_json()
+
+        if "name" in data:
+            exercise.name = data["name"]
+
+        if "description" in data:
+            exercise.description = data["description"]
+
+        if "duration" in data:
+            exercise.duration = data["duration"]
+
+        if "calories_burned" in data:
+            exercise.calories_burned = data["calories_burned"]
+
+        db.session.commit()
+
+        return exercise_schema.dump(exercise), 200
+
+
+    # DELETE /exercises/<id>
+    def delete(self, id):
+
+        exercise = Exercise.query.get_or_404(id)
+
+        db.session.delete(exercise)
+        db.session.commit()
+
+        return {
+            "message": "Exercise deleted successfully"
+        }, 200
+
+api.add_resource(
+    ExerciseByID,
+    "/exercises/<int:id>"
+)
+
+
+
+
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
