@@ -1,9 +1,9 @@
-from sqlalchemy import schema, fields
+from marshmallow import Schema, fields
 from models import *
 
 #Converts User objetcs to JSON
-class UserSchema(schema):
-    id = fields.Int
+class UserSchema(Schema):
+    id = fields.Int(dump_only=True)
     username = fields.Str(required =True)
     email = fields.Email(required=True)
 
@@ -15,7 +15,7 @@ class UserSchema(schema):
 
  #Exercise Schema
  #Converts Exercise objects to JSON
-class ExerciseShema(Schema):
+class ExerciseSchema(Schema):
     id = fields.Int(dump_only=True)  
 
     name = fields.Str(required=True)
@@ -28,3 +28,11 @@ class ExerciseShema(Schema):
 
     # Date the exercise was created
     created_at = fields.DateTime(dump_only=True)
+
+#Schema instances
+
+user_schema = UserSchema()
+users_schema = UserSchema(many=True)
+
+exercise_schema = ExerciseSchema()
+exercises_schema = ExerciseSchema(many=True)
