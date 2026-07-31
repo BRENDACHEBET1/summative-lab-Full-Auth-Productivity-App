@@ -1,4 +1,4 @@
-from flask import request
+from flask import request, session
 from flask_restful import Resource
 
 from config import app, api
@@ -11,6 +11,45 @@ from schemas import (
 )
 print("APP.PY LOADED")
 
+class Signup(Resource):
+
+    def post(self):
+
+        data = request.get_json()
+
+        # Check if username already exists
+        existing_user = User.query.filter_by(
+            username=data["username"]
+        ).first()
+
+        if existing_user:
+            return {
+                "error": "Username already exists"
+            }, 422
+
+
+        user = User(
+            username=data["username"],
+            email=data["email"],
+            age=data.get("age")
+        )
+
+        # Hash password
+        user.set_password(data["password"])
+
+        db.session.add(user)
+        db.session.commit()
+
+
+        # Log user in immediately
+        session["user_id"] = user.id
+
+
+        return user_schema.dump(user), 201
+    
+# Register signup route
+api.add_resource(Signup, "/signup")
+
 class Users(Resource):
 
     # GET /users
@@ -19,25 +58,6 @@ class Users(Resource):
 
         return users_schema.dump(users), 200
 
-
-    # POST /users
-    def post(self):
-
-        data = request.get_json()
-
-        user = User(
-            username=data["username"],
-            email=data["email"],
-            age=data.get("age")
-        )
-
-        # Hash password before saving
-        user.set_password(data["password"])
-
-        db.session.add(user)
-        db.session.commit()
-
-        return user_schema.dump(user), 201
 
     #Enpoint
 api.add_resource(Users, "/users")
