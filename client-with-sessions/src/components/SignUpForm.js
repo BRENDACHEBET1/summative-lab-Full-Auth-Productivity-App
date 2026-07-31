@@ -5,6 +5,8 @@ function SignUpForm({ onLogin }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
+  const [email, setEmail] = useState("");
+  const [age, setAge] = useState("");
   const [errors, setErrors] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -19,6 +21,8 @@ function SignUpForm({ onLogin }) {
       },
       body: JSON.stringify({
         username,
+        email,
+        age,
         password,
         password_confirmation: passwordConfirmation
       }),
@@ -44,6 +48,25 @@ function SignUpForm({ onLogin }) {
           onChange={(e) => setUsername(e.target.value)}
         />
       </FormField>
+      <FormField>
+        <Label htmlFor="email">Email</Label>
+        <Input
+          type="email"
+          id="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+      </FormField>
+      <FormField>
+        <Label htmlFor="age">Age</Label>
+        <Input
+          type="number"
+          id="age"
+          value={age}
+          onChange={(e) => setAge(e.target.value)}
+        />
+      </FormField>
+
       <FormField>
         <Label htmlFor="password">Password</Label>
         <Input
