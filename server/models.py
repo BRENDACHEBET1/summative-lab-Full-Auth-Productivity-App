@@ -1,13 +1,6 @@
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import MetaData
-from marshmallow import Schema, fields
 
-metadata = MetaData(naming_convention={
-    "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
-})
+from config import db, bcrypt
 
-# Initialize the SQLAlchemy database object
-db = SQLAlchemy(metadata=metadata)
 
 #User Model
 class User(db.Model):
@@ -19,6 +12,7 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     age = db.Column(db.Integer)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
+    password = db.Column(db.String(255), nullable=True)
 
     # One user can have many exercises
     # One user can have many exercises.
@@ -28,6 +22,15 @@ class User(db.Model):
         back_populates="user",
         cascade="all, delete-orphan"
     )
+
+    def set_password(self, password):
+        """Hash and store a user's password."""
+        self.password = bcrypt.generate_password_hash(password).decode("utf-8")
+
+
+    def check_password(self, password):
+        """Return True if the password matches the stored hash."""
+        return bcrypt.check_password_hash(self.password, password)
 
     def __repr__(self):
         return f'User {self.username}, ID {self.id}'
