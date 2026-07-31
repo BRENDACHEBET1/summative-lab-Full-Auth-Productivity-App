@@ -145,6 +145,19 @@ class CheckSession(Resource):
 
 api.add_resource(CheckSession, "/check_session")
 
+class Logout(Resource):
+
+    def delete(self):
+
+        session.pop("user_id", None)
+
+        return {
+            "message": "Logged out successfully"
+        }, 200
+
+
+api.add_resource(Logout, "/logout")
+
 
 class Exercises(Resource):
 
