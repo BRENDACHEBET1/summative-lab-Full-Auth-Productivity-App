@@ -14,14 +14,32 @@ class Exercises(Resource):
     # GET /exercises
     def get(self):
 
-        # Get only exercises belonging to logged in user
-        exercises = Exercise.query.filter_by(
+        # Pagination params — defaults to page 1, 10 per page
+        page = request.args.get("page", 1, type=int)
+        per_page = request.args.get("per_page", 10, type=int)
+ 
+        # Guard against bad/abusive values
+        if page < 1:
+            page = 1
+        per_page = max(1, min(per_page, 100))
+ 
+ 
+        # Get only exercises belonging to logged in user, paginated
+        pagination = Exercise.query.filter_by(
             user_id=session["user_id"]
-        ).all()
-
-
-        return exercises_schema.dump(exercises), 200
-
+        ).paginate(page=page, per_page=per_page, error_out=False)
+ 
+ 
+        return {
+            "exercises": exercises_schema.dump(pagination.items),
+            "total": pagination.total,
+            "page": pagination.page,
+            "per_page": pagination.per_page,
+            "pages": pagination.pages,
+            "has_next": pagination.has_next,
+            "has_prev": pagination.has_prev
+        }, 200
+ 
 
 
     # POST /exercises
