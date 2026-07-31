@@ -122,6 +122,30 @@ class Login(Resource):
 api.add_resource(Login, "/login")
 
 
+class CheckSession(Resource):
+
+    def get(self):
+
+        user_id = session.get("user_id")
+
+        if not user_id:
+            return {
+                "error": "Not logged in"
+            }, 401
+
+        user = User.query.get(user_id)
+
+        if not user:
+            return {
+                "error": "User not found"
+            }, 404
+
+        return user_schema.dump(user), 200
+
+
+api.add_resource(CheckSession, "/check_session")
+
+
 class Exercises(Resource):
 
     # GET /exercises
