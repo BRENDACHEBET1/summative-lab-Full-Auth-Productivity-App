@@ -31,6 +31,9 @@ class Users(Resource):
             age=data.get("age")
         )
 
+        # Hash password before saving
+        user.set_password(data["password"])
+
         db.session.add(user)
         db.session.commit()
 
