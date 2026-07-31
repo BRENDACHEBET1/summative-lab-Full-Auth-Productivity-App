@@ -1,14 +1,15 @@
 from flask import request
 from flask_restful import Resource
+
 from config import app, api
-from models import db, User, Exercise
+from models import User, Exercise, db
 from schemas import (
     user_schema,
     users_schema,
     exercise_schema,
-    exercises_schema,
+    exercises_schema
 )
-
+print("APP.PY LOADED")
 
 class Users(Resource):
 
@@ -37,6 +38,7 @@ class Users(Resource):
 
     #Enpoint
 api.add_resource(Users, "/users")
+print("USERS ROUTE ADDED")
 
 
 class UserByID(Resource):
@@ -147,9 +149,6 @@ api.add_resource(
     ExerciseByID,
     "/exercises/<int:id>"
 )
-
-
-
 
 
 
