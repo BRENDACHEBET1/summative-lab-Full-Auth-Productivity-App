@@ -9,7 +9,25 @@ from schemas import (
     exercise_schema,
     exercises_schema
 )
-print("APP.PY LOADED")
+
+@app.before_request
+def check_if_logged_in():
+
+    open_endpoints = [
+        "signup",
+        "login",
+        "checksession",
+        "logout",
+        "static"
+    ]
+
+    if request.endpoint in open_endpoints:
+        return
+
+    if "user_id" not in session:
+        return {
+            "error": "Unauthorized"
+        }, 401
 
 class Signup(Resource):
 
@@ -54,14 +72,19 @@ class Users(Resource):
 
     # GET /users
     def get(self):
-        users = User.query.all()
+        user = User.query.get(session["user_id"])
 
-        return users_schema.dump(users), 200
+        if not user:
+            return {
+                "error": "User not found"
+            }, 404
+
+        return user_schema.dump(user), 200
 
 
-    #Enpoint
+#Enpoint
 api.add_resource(Users, "/users")
-print("USERS ROUTE ADDED")
+
 
 
 class UserByID(Resource):
@@ -70,6 +93,11 @@ class UserByID(Resource):
     def patch(self, id):
 
         user = User.query.get_or_404(id)
+
+        if user.id != session["user_id"]:
+            return {
+                "error": "Forbidden"
+            }, 403
 
         data = request.get_json()
 
@@ -88,6 +116,11 @@ class UserByID(Resource):
     def delete(self, id):
 
         user = User.query.get_or_404(id)
+
+        if user.id != session["user_id"]:
+            return {
+                "error": "Forbidden"
+            }, 403
 
         db.session.delete(user)
         db.session.commit()
@@ -164,8 +197,8 @@ class Exercises(Resource):
     # GET /exercises
     def get(self):
 
-        exercises = Exercise.query.all()
-
+        exercises = Exercise.query.filter_by(user_id=session["user_id"]).all()
+        
         return exercises_schema.dump(exercises), 200
 
 
@@ -179,7 +212,7 @@ class Exercises(Resource):
             category=data.get("category"),
             duration=data.get("duration"),
             calories_burned=data.get("calories_burned"),
-            user_id=data["user_id"]
+            user_id=session["user_id"]
         )
 
         db.session.add(exercise)
@@ -196,6 +229,11 @@ class ExerciseByID(Resource):
     def patch(self, id):
 
         exercise = Exercise.query.get_or_404(id)
+
+        if exercise.user_id != session["user_id"]:
+            return {
+                "error": "Forbidden"
+            }, 403
 
         data = request.get_json()
 
@@ -220,6 +258,10 @@ class ExerciseByID(Resource):
     def delete(self, id):
 
         exercise = Exercise.query.get_or_404(id)
+        if exercise.user_id != session["user_id"]:
+            return {
+                "error": "Forbidden"
+            }, 403
 
         db.session.delete(exercise)
         db.session.commit()
