@@ -42,7 +42,7 @@ class Signup(Resource):
 
         if existing_user:
             return {
-                "error": "Username already exists"
+                "error": ["Username already exists"]
             }, 422
 
 
@@ -148,7 +148,7 @@ class Login(Resource):
             return user_schema.dump(user), 200
 
         return {
-            "error": "Invalid username or password"
+            "error": ["Invalid username or password"]
         }, 401
 
 
