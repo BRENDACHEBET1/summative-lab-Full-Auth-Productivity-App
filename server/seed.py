@@ -12,18 +12,21 @@ with app.app_context():
         email="alice@example.com",
         age=25
     )
+    user1.set_password("password123")
 
     user2 = User(
         username="bob",
         email="bob@example.com",
         age=30
     )
+    user2.set_password("password123")
 
     user3 = User(
         username="charlie",
         email="charlie@example.com",
         age=22
     )
+    user3.set_password("password123")
 
     db.session.add_all([user1, user2, user3])
     db.session.commit()
