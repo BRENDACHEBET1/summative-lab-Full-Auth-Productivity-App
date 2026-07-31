@@ -10,25 +10,41 @@ The application provides session-based authentication and uses Flask-Bcrypt to s
 
 - User signup
 - User login and logout
-- Session authentication
+- Session-based authentication
 - Password hashing with Flask-Bcrypt
 - Check current user session
 - Create, update, and delete exercises
-- Protected routes
+- Protected API routes
 - User-owned exercise records
+
+## Project Structure
+
+```
+server/
+├── app.py
+├── config.py
+├── models.py
+├── schemas.py
+├── seed.py
+├── migrations/
+└── routes/
+    ├── auth.py
+    ├── users.py
+    └── exercises.py
+```
 
 ## Installation
 
 ### 1. Clone the repository
 
 ```bash
-git clone <https://github.com/BRENDACHEBET1/summative-lab-Full-Auth-Productivity-App.git>
+git clone https://github.com/BRENDACHEBET1/summative-lab-Full-Auth-Productivity-App.git
 ```
 
 ### 2. Navigate into the project folder
 
 ```bash
-cd fitness-tracker-api
+cd summative-lab-Full-Auth-Productivity-app
 ```
 
 ### 3. Navigate to the server folder
@@ -59,13 +75,6 @@ venv\Scripts\activate
 
 ### 6. Install dependencies
 
-Using pip:
-
-```bash
-pip install -r requirements.txt
-```
-
-Or using pipenv:
 
 ```bash
 pipenv install
@@ -74,33 +83,23 @@ pipenv shell
 
 ## Database Setup
 
-Initialize the database migrations:
-
-```bash
-flask db init
-```
-
-Create a migration:
-
-```bash
-flask db migrate -m "Initial migration"
-```
-
-Apply migrations:
+Apply the existing database migrations:
 
 ```bash
 flask db upgrade
 ```
 
-## Running the Application
+## Running the Backend
 
 Set the Flask application:
+
+Linux/Mac:
 
 ```bash
 export FLASK_APP=app:app
 ```
 
-Start the development server:
+Start the Flask server:
 
 ```bash
 flask run
@@ -112,9 +111,35 @@ The API will run at:
 http://127.0.0.1:5000
 ```
 
+## Frontend Setup
+
+Navigate to the frontend folder:
+
+```bash
+cd client
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Start the frontend:
+
+```bash
+npm start
+```
+
+The frontend will run at:
+
+```
+http://localhost:4000
+```
+
 ## API Endpoints
 
-### Authentication
+## Authentication
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
@@ -123,7 +148,7 @@ http://127.0.0.1:5000
 | GET | `/check_session` | Check current logged-in user |
 | DELETE | `/logout` | Log out a user |
 
-### Users
+## Users
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
@@ -131,14 +156,14 @@ http://127.0.0.1:5000
 | PATCH | `/users/<id>` | Update user |
 | DELETE | `/users/<id>` | Delete user |
 
-### Exercises
+## Exercises
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/exercises` | Get user's exercises |
-| POST | `/exercises` | Create exercise |
-| PATCH | `/exercises/<id>` | Update exercise |
-| DELETE | `/exercises/<id>` | Delete exercise |
+| GET | `/exercises` | Get logged-in user's exercises |
+| POST | `/exercises` | Create an exercise |
+| PATCH | `/exercises/<id>` | Update an exercise |
+| DELETE | `/exercises/<id>` | Delete an exercise |
 
 ## Technologies Used
 
@@ -150,10 +175,11 @@ http://127.0.0.1:5000
 - Flask-Bcrypt
 - Marshmallow
 - SQLite
+- React
 
 ## Database Models
 
-### User
+### User Model
 
 Fields:
 
@@ -164,7 +190,7 @@ Fields:
 - password
 - created_at
 
-### Exercise
+### Exercise Model
 
 Fields:
 
@@ -177,7 +203,11 @@ Fields:
 
 ## Authentication
 
-The application uses Flask sessions to keep users logged in. Protected routes require an authenticated session.
+The application uses Flask sessions to maintain user authentication.
+
+Passwords are securely hashed using Flask-Bcrypt before being stored in the database.
+
+Protected routes require a valid user session containing the logged-in user's ID.
 
 Unauthorized requests return:
 
@@ -192,5 +222,7 @@ with status code:
 ```
 401
 ```
+
 ## Author
-Brenda Chebet.
+
+Brenda Chebet
