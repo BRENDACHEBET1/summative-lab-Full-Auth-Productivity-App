@@ -54,10 +54,21 @@ class UserByID(Resource):
 
 
         if "username" in data:
+            existing = User.query.filter_by(username=data["username"]).first()
+
+            if existing and existing.id != user.id:
+                return {"errors": ["Username already exists"]}, 422
             user.username = data["username"]
 
 
         if "email" in data:
+            # Check no one else already has this email
+            existing = User.query.filter_by(email=data["email"]).first()
+ 
+            if existing and existing.id != user.id:
+                return {
+                    "errors": ["Email already exists"]
+                }, 422
             user.email = data["email"]
 
 

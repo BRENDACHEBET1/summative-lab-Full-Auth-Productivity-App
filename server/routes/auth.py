@@ -23,6 +23,11 @@ class Signup(Resource):
                 "errors": ["Username already exists"]
             }, 422
 
+        #Check if eail exists
+        existing_email = User.query.filter_by(email=data["email"]).first()
+
+        if existing_email:
+            return {"errors": ["Email already exists"]}, 422
 
         user = User(
             username=data["username"],
