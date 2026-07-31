@@ -6,7 +6,8 @@ class UserSchema(Schema):
     id = fields.Int(dump_only=True)
     username = fields.Str(required =True)
     email = fields.Email(required=True)
-
+    age = fields.Int()
+    
     #Password is accepted when creating/updating a user but not returned in API responses
     password = fields.Str(load_only=True, required=True)
     created_at = fields.DateTime(dump_only=True)
